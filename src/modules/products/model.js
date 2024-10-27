@@ -3,7 +3,11 @@ const { productStatus } = require("../../constants/enums");
 
 const productSchema = new Schema(
   {
-    fullName: { type: String, required: true, default: { text: "نام بیمار" } },
+    patientName: {
+      type: String,
+      required: true,
+      default: { text: "نام بیمار" },
+    },
     master: { type: Types.ObjectId, required: true, default: { text: "" } },
     plan: { type: Types.ObjectId, required: true, default: { text: "" } },
     caption: { type: String, required: false, default: { text: "" } },

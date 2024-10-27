@@ -1,16 +1,15 @@
-const {setHome} = require("../modules/pages/adjustment");
-const labels = require("../modules/pages/labels");
-const pages = require("../modules/pages/settings");
+const KeyboardListener = require("../modules/keyboards/listeners");
+const keyboardPath = require("../modules/keyboards/keyboardsPath");
+const KeyboardDesigner = require("../modules/keyboards/designer");
 function command(bot) {
-  bot.command("start", setHome);
+  bot.command("start", KeyboardDesigner.set_home);
 }
 
 async function keyboard(bot) {
-  bot.on("message:text", async (ctx) => {
-    for (item in labels) {
-      if (item.toString() === ctx.session.keyboardPath) {
-        console.log("hello");
-        await pages[ctx.session.keyboardPath].listeners(ctx);
+  await bot.on("message:text", async (ctx) => {
+    for (item in keyboardPath) {
+      if (ctx.session.path === keyboardPath[item]) {
+        await KeyboardListener.autoListen(ctx);
       }
     }
   });
