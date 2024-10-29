@@ -34,8 +34,10 @@ class KeyboardDesigner {
 
   // set keyboards
 
-  async autoSet(ctx, path) {
-    switch (path) {
+  async autoSet(ctx) {
+    console.log("autoset");
+
+    switch (ctx.session.path) {
       // HOME
       case keyboardPath.home:
         await this.set_home(ctx);
@@ -56,7 +58,8 @@ class KeyboardDesigner {
         await this.set_home_product(ctx);
         break;
       case keyboardPath.home_product_retainer:
-        await this.set_home_product(ctx);
+        console.log("retainer");
+        await this.set_home_product_retainer(ctx);
         break;
       case keyboardPath.home_product_spaceSaver:
         await this.set_home_product(ctx);

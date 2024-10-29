@@ -31,8 +31,10 @@ class KeyboardListener {
 
       // PRODUCT ----
       case keyboardsPath.home_product:
-        console.log("mahdi");
         await this.listen_home_product(ctx);
+        break;
+      case keyboardsPath.home_product_retainer:
+        await this.listen_home_product_retainer(ctx);
         break;
 
       // SHORTCUT
@@ -41,13 +43,15 @@ class KeyboardListener {
         break;
 
       default:
-        throw new Error("INVALID KEYBOARD PATH!");
+        throw new Error("INVALID KEYBOARD PATH! => " + ctx.session.path);
         break;
     }
   }
 
   // HOME
   async listen_home(ctx) {
+    console.log("$ " + ctx.session.path);
+
     const keyboard = this.#findKeyboard(ctx);
     for (item in keyboard) {
       if (ctx.msg.text === keyboard[item].toString()) {
@@ -56,6 +60,7 @@ class KeyboardListener {
           await this.#designer.set_shortcut(ctx);
         } else {
           await this.#designer.autoSet(ctx, this.#setPath(ctx, item));
+          console.log(ctx.session.path);
         }
       }
     }
@@ -70,11 +75,26 @@ class KeyboardListener {
 
   // PRODUCT ----
   async listen_home_product(ctx) {
+    console.log("$ " + ctx.session.path);
     const keyboard = this.#findKeyboard(ctx);
     for (item in keyboard) {
-      if (this.#goHome(ctx, keyboard)) break;
       if (ctx.msg.text === keyboard[item]) {
-        console.log("goHome");
+        if (this.#goHome(ctx, keyboard)) {
+        } else {
+          await this.#designer.autoSet(ctx);
+          this.#setPath(ctx, item);
+        }
+      }
+    }
+  }
+  async listen_home_product_retainer(ctx) {
+    const keyboard = this.#findKeyboard(ctx);
+    console.log("hello");
+    for (item in keyboard) {
+      // if (this.#goHome(ctx, keyboard)) break;
+
+      if (ctx.msg.text === keyboard[item]) {
+        console.log(keyboard[item]);
         await this.#designer.autoSet(ctx, this.#setPath(ctx, item));
       }
     }
@@ -96,7 +116,7 @@ class KeyboardListener {
   #setPath(ctx, item) {
     ctx.session.path =
       keyboardsPath[
-        `${ctx.session.path.replace("/", "_").slice(1)}_${item.toString()}`
+        `${ctx.session.path.replaceAll("/", "_").slice(1)}_${item.toString()}`
       ];
     return ctx.session.path;
   }
